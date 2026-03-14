@@ -87,8 +87,9 @@ const seedData = async (): Promise<void> => {
     ]);
 
     console.log('Sample links created (6 links with types).');
+    const adminPass = process.env.ADMIN_PASSWORD || 'Admin@123';
     console.log('\nSeed completed successfully!');
-    console.log('Admin login:  admin@corizo.in  /  Admin@123');
+    console.log(`Admin login:  admin@corizo.in  /  ${adminPass}`);
     console.log('Author login: author@corizo.in /  Author@123');
   } catch (error) {
     console.error('Seed error:', error);
