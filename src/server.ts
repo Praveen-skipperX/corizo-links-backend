@@ -25,13 +25,20 @@ const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
   .split(",")
   .map((o) => o.trim());
 
+const isDev = process.env.NODE_ENV !== "production";
+
 // Security middleware
 app.use(helmet());
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow no-origin requests (curl, Postman, server-to-server)
-      if (!origin || allowedOrigins.includes(origin)) {
+      // In development allow any localhost port (Vite can drift from 5173 → 5174/5175/...)
+      const isLocalhost =
+        isDev &&
+        (origin?.startsWith("http://localhost:") ||
+          origin?.startsWith("http://127.0.0.1:"));
+
+      if (!origin || isLocalhost || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error(`CORS: origin ${origin} not allowed`));
